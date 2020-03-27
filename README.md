@@ -1,15 +1,34 @@
 # LocGatt 
 
 ### Objectif
-Gatt WriteChar déclenché par locationUpdate
+Gatt WriteChar vers esp32 gatts déclenché par locationUpdate
 
 ### Design
-
-
+Activity: onCreate() -> startService()
+	Service: onStartCommand()
+				--> requestLocationUpdates()
+				--> startForeground()
+				--> connectmGatt()
+	onLocationChanged() -> readCharacteristic()
 
 	
 ### ToDo
-Gatt
+
+
+
+
+Déterminer comment tester stabilité reproduisant une session (field data collection, kite, ...)
+
+---> esp32 sur batterie externe fiable pas lifepo4
+
+
+
+
+
+
+
+
+
 
 
 
@@ -20,7 +39,7 @@ make LocGatt
 adb uninstall vvnx.locgatt
 adb install out/target/product/mido/system/app/LocGatt/LocGatt.apk
 
-pm grant vvnx.locgatt android.permission.ACCESS_FINE_LOCATION
+pm grant vvnx.locgatt android.permission.ACCESS_FINE_LOCATION #Suffisant pour loc + bluetooth
 
 
 # repo / rsync
