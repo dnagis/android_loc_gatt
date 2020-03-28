@@ -15,7 +15,7 @@
 
 <resources>
 
-	<string name="txt_btn_1">START</string>
+	<string name="txt_btn_stop">STOP</string>
     <string name="textview_1_text">no data yet</string>
 
 </resources>

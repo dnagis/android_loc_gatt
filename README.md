@@ -14,6 +14,7 @@ Activity: onCreate() -> startService()
 	
 ### ToDo
 
+Feedback UI (Activity) sur la connexion state
 
 
 
@@ -22,7 +23,12 @@ Déterminer comment tester stabilité reproduisant une session (field data colle
 ---> esp32 sur batterie externe fiable pas lifepo4
 
 
+### Doc
 
+https://developer.android.com/guide/components/bound-services
+https://stackoverflow.com/questions/8341667/bind-unbind-service-example-android
+https://www.cs.dartmouth.edu/~campbell/cs65/lecture19/lecture19.html
+development/samples/browseable/BluetoothLeGatt/src/com.example.android.bluetoothlegatt
 
 
 

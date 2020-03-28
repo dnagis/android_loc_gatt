@@ -4,6 +4,7 @@ import android.app.Service;
 import android.os.Bundle;
 import android.util.Log;
 import android.os.IBinder;
+import android.os.Binder;
 import android.content.Intent;
 import android.content.Context;
 
@@ -30,6 +31,9 @@ public class LocGattService extends Service implements LocationListener {
 	
 	private static final String TAG = "LocGatt";
 	
+	//https://developer.android.com/guide/components/bound-services
+	private final IBinder binder = new LocalBinder();
+	
 	Notification mNotification;
 	
 	public LocationManager mLocationManager;		
@@ -41,11 +45,29 @@ public class LocGattService extends Service implements LocationListener {
 	private BluetoothDevice monBTDevice = null;
 	private BluetoothGatt mBluetoothGatt = null;
 	
-	
 	private BluetoothGattCharacteristic mCharacteristic = null;	
 	private static final UUID SERVICE_UUID = UUID.fromString("000000ff-0000-1000-8000-00805f9b34fb");
 	private static final UUID CHARACTERISTIC_PRFA_UUID = UUID.fromString("0000ff01-0000-1000-8000-00805f9b34fb");
 	private String BDADDR = "30:AE:A4:04:C3:5A";	
+	
+
+
+
+	//https://developer.android.com/guide/components/bound-services
+	//le Binder qu'on va retourner au client ( = l'activité)
+    public class LocalBinder extends Binder {
+        LocGattService getService() {
+            // Return this instance of LocGattService pour que les clients (mon activité) puissent appeler ses méthodes
+            return LocGattService.this;
+        }
+    }
+    
+	//Retourne un LocalBinder (classe définie ci dessus) quand l'activité (le "client" appelle bindService)
+	@Override
+	public IBinder onBind(Intent intent) {
+		return binder;
+	}    
+    
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
@@ -80,10 +102,18 @@ public class LocGattService extends Service implements LocationListener {
 		return START_NOT_STICKY;
 	}
 	
-	//Service must implement the inherited abstract method Service.onBind(Intent)
-	@Override
-		public IBinder onBind(Intent intent) {
-		return null;
+
+	
+	
+	
+	public void shutDown() {
+		if (mBluetoothGatt != null) {
+			mBluetoothGatt.disconnect();
+			mBluetoothGatt.close(); 
+		}
+		mLocationManager.removeUpdates(this);
+		stopForeground(true);
+		stopSelf();		
 	}
   
   
@@ -122,7 +152,7 @@ public class LocGattService extends Service implements LocationListener {
 	 * */
 	
 	
-	void connectmGatt(){
+	public void connectmGatt(){
 		
 		if (bluetoothManager == null) bluetoothManager = (BluetoothManager)getSystemService(BLUETOOTH_SERVICE);	
 		if (mBluetoothAdapter == null) mBluetoothAdapter = bluetoothManager.getAdapter();	

@@ -20,19 +20,17 @@
     
     
 <Button
-	android:id="@+id/button_1"
+	android:id="@+id/button_stop"
 	android:layout_height="wrap_content"
 	android:layout_width="wrap_content"
-	android:layout_alignParentLeft="true"
-	android:text="@string/txt_btn_1"
-	android:onClick="ActionPressBouton_1" />    
+	android:layout_alignParentRight="true"
+	android:text="@string/txt_btn_stop"
+	android:onClick="ActionPressBouton_stop" />    
 
-<EditText xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/textview_1"
+<TextView xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/textview_1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:textSize="18sp"
-    android:autoText="true"
-    android:capitalize="sentences"
     android:text="@string/textview_1_text" />
 
 
