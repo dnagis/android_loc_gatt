@@ -8,6 +8,10 @@ import android.os.Binder;
 import android.content.Intent;
 import android.content.Context;
 
+import android.os.Message;
+import android.os.Messenger;
+import android.os.Handler;
+import android.os.RemoteException;
 
 import android.location.Location;
 import android.location.LocationListener;
@@ -31,8 +35,12 @@ public class LocGattService extends Service implements LocationListener {
 	
 	private static final String TAG = "LocGatt";
 	
-	//https://developer.android.com/guide/components/bound-services
-	private final IBinder binder = new LocalBinder();
+	public static final int MSG_SAY_HELLO = 1; //Pour tester le système de messages
+	public static final int MSG_REG_CLIENT = 200;
+	public static final int MSG_NEW_LOC = 300; //enregistrer le client dans le service
+	public static final int MSG_STOP = 400;
+	public static final int MSG_BT_CONNECTED = 500;
+	public static final int MSG_BT_DISCONNECTED = 600;
 	
 	Notification mNotification;
 	
@@ -50,23 +58,54 @@ public class LocGattService extends Service implements LocationListener {
 	private static final UUID CHARACTERISTIC_PRFA_UUID = UUID.fromString("0000ff01-0000-1000-8000-00805f9b34fb");
 	private String BDADDR = "30:AE:A4:04:C3:5A";	
 	
+	
+	/**
+	 * système IPC Messenger / Handler basé sur le Binder
+	 */
+	  
+	private Messenger mClient; // l'activité
 
+	private class IncomingHandler extends Handler {
+        
 
-
-	//https://developer.android.com/guide/components/bound-services
-	//le Binder qu'on va retourner au client ( = l'activité)
-    public class LocalBinder extends Binder {
-        LocGattService getService() {
-            // Return this instance of LocGattService pour que les clients (mon activité) puissent appeler ses méthodes
-            return LocGattService.this;
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+				//REG_CLIENT: juste un trick pour avoir un messenger vers l'activité (=client)
+				case MSG_REG_CLIENT:
+                    Log.d(TAG, "Service: handleMessage() -> REG_CLIENT");
+                    mClient = msg.replyTo;
+                    break;
+				case MSG_STOP:
+                    Log.d(TAG, "Service: handleMessage() -> STOP");
+                    shutDown();
+                    break;                    
+                default:
+                    super.handleMessage(msg);
+            }
         }
     }
-    
-	//Retourne un LocalBinder (classe définie ci dessus) quand l'activité (le "client" appelle bindService)
+
+	 
+	
+	final Messenger mMessenger = new Messenger(new IncomingHandler()); //le messenger local
+	
+
 	@Override
 	public IBinder onBind(Intent intent) {
-		return binder;
+		
+		return mMessenger.getBinder(); //envoyé vers onServiceConnected() dans l'activité
 	}    
+    
+    /**
+     * 
+     * 
+     * Le service
+     * 
+     * 
+     */
+    
+    
     
 	
 	@Override
@@ -128,6 +167,8 @@ public class LocGattService extends Service implements LocationListener {
     public void onLocationChanged(Location location) {
         Log.d(TAG, location.getLatitude() + ",  " + location.getLongitude() + ",  " + location.getAccuracy() + ",  " + location.getAltitude() + ",  " + location.getVerticalAccuracyMeters() + ",  "  + location.getTime());
         if (mCharacteristic != null) mBluetoothGatt.readCharacteristic(mCharacteristic);
+        //ToDo: envoyer un message au client = activity
+        
 	}
         
 	@Override
@@ -169,10 +210,20 @@ public class LocGattService extends Service implements LocationListener {
 			Log.i(TAG, "onConnectionStateChange()");
 			if (newState == BluetoothProfile.STATE_CONNECTED) {
 				gatt.discoverServices(); //--> onServicesDiscovered()
+				Message msg = Message.obtain(null, LocGattService.MSG_BT_CONNECTED);
+				try {
+					mClient.send(msg);
+					} catch (RemoteException e) {
+					e.printStackTrace();
+				}
 			} else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-				Log.i(TAG, "Disconnected from GATT server.");	
+				Message msg = Message.obtain(null, LocGattService.MSG_BT_DISCONNECTED);
+				try {
+					mClient.send(msg);
+					} catch (RemoteException e) {
+					e.printStackTrace();
+				}
 			}
-
 		}
 	
 		@Override

@@ -1,7 +1,7 @@
 # LocGatt 
 
 ### Objectif
-Gatt WriteChar vers esp32 gatts déclenché par locationUpdate
+Gatt WriteChar vers esp32 gatts triggered par locationUpdate()
 
 ### Design
 Activity: onCreate() -> startService()
@@ -14,9 +14,7 @@ Activity: onCreate() -> startService()
 	
 ### ToDo
 
-Feedback UI (Activity) sur la connexion state
-
-
+Feedback UI (Activity) --> système Binder / Messenger: décrire +++
 
 Déterminer comment tester stabilité reproduisant une session (field data collection, kite, ...)
 
@@ -25,15 +23,19 @@ Déterminer comment tester stabilité reproduisant une session (field data colle
 
 ### Doc
 
+-Binding
 https://developer.android.com/guide/components/bound-services
 https://stackoverflow.com/questions/8341667/bind-unbind-service-example-android
 https://www.cs.dartmouth.edu/~campbell/cs65/lecture19/lecture19.html
 development/samples/browseable/BluetoothLeGatt/src/com.example.android.bluetoothlegatt
 
+-Service to Activity
+https://stackoverflow.com/questions/2463175/how-to-have-android-service-communicate-with-activity
+https://www.c-sharpcorner.com/article/bound-service-using-messenger-in-android-part-3/
+le soir:
+https://medium.com/mindorks/mastering-android-handler-chapter-2-fb67d94f6327
 
-
-
-
+samples/browseable/messagingservice
 
 
 
