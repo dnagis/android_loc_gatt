@@ -6,6 +6,7 @@ import android.os.IBinder;
 import android.view.View;
 import android.view.WindowManager;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import android.os.Message;
 import android.os.Messenger;
@@ -13,6 +14,7 @@ import android.os.Handler;
 import android.os.RemoteException;
 
 import android.widget.TextView;
+import android.widget.CheckBox;
 
 import android.util.Log;
 
@@ -36,6 +38,8 @@ public class LocGattActivity extends Activity {
 
 
 	TextView textview_1;
+	CheckBox checkbox_1;
+	
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,6 +47,8 @@ public class LocGattActivity extends Activity {
         View view = getLayoutInflater().inflate(R.layout.mon_activity, null);
         setContentView(view);
         textview_1 = findViewById(R.id.textview_1); 
+
+        checkbox_1 = findViewById(R.id.checkbox_1);
         
         Intent i = new Intent(this, LocGattService.class);
         startService(i); //nécessaire ou pas???
@@ -79,12 +85,17 @@ public class LocGattActivity extends Activity {
             switch (msg.what) {
                 case LocGattService.MSG_NEW_LOC:
                     Log.d(TAG, "Activity: handler -> MSG_NEW_LOC");
+					Date d = new Date();
+					SimpleDateFormat sdf = new SimpleDateFormat("dd MMM HH:mm:ss");	
+					textview_1.setText("LAST LOC: "+ sdf.format(d));
                     break;
                 case LocGattService.MSG_BT_CONNECTED:
                     Log.d(TAG, "Activity: handler -> MSG_BT_CONNECTED");
+                    checkbox_1.setChecked(true);
                     break;
                 case LocGattService.MSG_BT_DISCONNECTED:
                     Log.d(TAG, "Activity: handler -> MSG_BT_DISCONNECTED");
+                    checkbox_1.setChecked(false);
                     break;
                 default:
                     super.handleMessage(msg);

@@ -167,7 +167,12 @@ public class LocGattService extends Service implements LocationListener {
     public void onLocationChanged(Location location) {
         Log.d(TAG, location.getLatitude() + ",  " + location.getLongitude() + ",  " + location.getAccuracy() + ",  " + location.getAltitude() + ",  " + location.getVerticalAccuracyMeters() + ",  "  + location.getTime());
         if (mCharacteristic != null) mBluetoothGatt.readCharacteristic(mCharacteristic);
-        //ToDo: envoyer un message au client = activity
+        Message msg = Message.obtain(null, LocGattService.MSG_NEW_LOC);
+				try {
+					mClient.send(msg);
+					} catch (RemoteException e) {
+					e.printStackTrace();
+				}
         
 	}
         

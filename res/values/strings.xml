@@ -16,6 +16,6 @@
 <resources>
 
 	<string name="txt_btn_stop">STOP</string>
-    <string name="textview_1_text">no data yet</string>
+    <string name="textview_1_text">no loc yet</string>
 
 </resources>
