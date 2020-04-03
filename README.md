@@ -1,15 +1,7 @@
 # LocGatt 
 
-### Objectif
+### Description
 Gatt WriteChar vers esp32 gatts triggered par locationUpdate()
-
-
-### ToDo
-
-UI: connection BT, dernière loc
-Est-il possible de passer le bluetooth dans une autre classe pour lisibilité du code du Service???
-
-
 
 
 ### Design
@@ -55,10 +47,6 @@ development/samples/browseable/BluetoothLeGatt/src/com.example.android.bluetooth
 https://stackoverflow.com/questions/2463175/how-to-have-android-service-communicate-with-activity
 https://www.c-sharpcorner.com/article/bound-service-using-messenger-in-android-part-3/
 https://medium.com/mindorks/mastering-android-handler-chapter-2-fb67d94f6327 ++++++ --> surtout la partie "The secret sauce is messenger"
-
-
-
-
 
 
 ### Ergonomie: EveryDay

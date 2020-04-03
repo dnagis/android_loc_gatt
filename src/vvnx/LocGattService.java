@@ -47,7 +47,7 @@ public class LocGattService extends Service implements LocationListener {
 	Notification mNotification;
 	
 	public LocationManager mLocationManager;		
-	private static final int LOC_MIN_TIME = 10 * 1000; //long: minimum time interval between location updates, in milliseconds
+	private static final int LOC_MIN_TIME = 20 * 1000; //long: minimum time interval between location updates, in milliseconds
     private static final int LOC_MIN_DIST = 0; //float: minimum distance between location updates, in meters
     
     private BluetoothManager bluetoothManager = null;	
