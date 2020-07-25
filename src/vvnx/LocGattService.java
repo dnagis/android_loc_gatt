@@ -38,8 +38,8 @@ public class LocGattService extends Service implements LocationListener {
 	private static final String TAG = "LocGatt";
 	
 	public static final int MSG_SAY_HELLO = 1; //Pour tester le système de messages
-	public static final int MSG_REG_CLIENT = 200;
-	public static final int MSG_NEW_LOC = 300; //enregistrer le client dans le service
+	public static final int MSG_REG_CLIENT = 200;//enregistrer le client dans le service
+	public static final int MSG_NEW_LOC_SENT = 300; 
 	public static final int MSG_STOP = 400;
 	public static final int MSG_BT_CONNECTED = 500;
 	public static final int MSG_BT_DISCONNECTED = 600;
@@ -190,16 +190,20 @@ public class LocGattService extends Service implements LocationListener {
 			//Exple: 43.93302858, 4.98908925 -> 9 (on sait que lat va tenir les 9 prochains bytes), + 105dc7b4a + 8 (idem pour lng: length = 8) + 1dbcbefd
 			Log.d(TAG, "conversion lat=" + Long.toHexString(lat_l) + "  lng=" + Long.toHexString(lng_l) + " le concat=" + concat);		
 			mCharacteristic.setValue(concat);
-			mBluetoothGatt.writeCharacteristic(mCharacteristic);
-			maBDD.logFix(location.getTime(), location.getLatitude(), location.getLongitude(), location.getAccuracy());
-        }
-        
-        Message msg = Message.obtain(null, LocGattService.MSG_NEW_LOC);
+			
+			if(mBluetoothGatt.writeCharacteristic(mCharacteristic)) {
+				maBDD.logFix(location.getTime(), location.getLatitude(), location.getLongitude(), location.getAccuracy());
+				Message msg = Message.obtain(null, LocGattService.MSG_NEW_LOC_SENT);
 				try {
 					mClient.send(msg);
 					} catch (RemoteException e) {
 					e.printStackTrace();
 				}
+				
+			}
+        }
+        
+
         
 	}
         

@@ -84,11 +84,11 @@ public class LocGattActivity extends Activity {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case LocGattService.MSG_NEW_LOC:
-                    Log.d(TAG, "Activity: handler -> MSG_NEW_LOC");
+                case LocGattService.MSG_NEW_LOC_SENT:
+                    Log.d(TAG, "Activity: handler -> MSG_NEW_LOC_SENT");
 					Date d = new Date();
 					SimpleDateFormat sdf = new SimpleDateFormat("dd MMM HH:mm:ss");	
-					tv_lastloc.setText("LAST LOC: "+ sdf.format(d));
+					tv_lastloc.setText("LAST LOC SENT: "+ sdf.format(d));
 					tv_nlocs.setText("N LOCS: " + nlocs++);
                     break;
                 case LocGattService.MSG_BT_CONNECTED:
