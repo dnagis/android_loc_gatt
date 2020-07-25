@@ -6,6 +6,12 @@ LOCAL_MODULE_TAGS := samples
 # Only compile source java files in this apk.
 LOCAL_SRC_FILES := $(call all-java-files-under, src)
 
+#pour pouvoir mettre parent="Theme.MaterialComponents.NoActionBar" dans res/values/styles.xml
+LOCAL_STATIC_ANDROID_LIBRARIES += \
+    com.google.android.material_material \
+    androidx.lifecycle_lifecycle-livedata \
+    androidx.lifecycle_lifecycle-viewmodel
+
 LOCAL_PACKAGE_NAME := LocGatt
 
 LOCAL_SDK_VERSION := current

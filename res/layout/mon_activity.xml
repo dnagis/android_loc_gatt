@@ -31,22 +31,24 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/tv_lastloc"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_below="@+id/button_stop"
     android:textSize="18sp"
     android:text="@string/tv_lastloc_txt" />
     
 <TextView xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/tv_nlocs"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-     android:layout_below="@+id/tv_lastloc"
+    android:layout_below="@+id/tv_lastloc"
     android:textSize="18sp"
     android:text="@string/tv_nlocs_txt" />
     
 
     
     
-<CheckBox xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/checkbox_1"
+<Switch xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/switch_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+         android:theme="@style/MonStyle"
         android:checked="false"
         android:clickable="false" 
         android:layout_centerVertical="true"

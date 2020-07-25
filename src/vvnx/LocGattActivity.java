@@ -14,7 +14,7 @@ import android.os.Handler;
 import android.os.RemoteException;
 
 import android.widget.TextView;
-import android.widget.CheckBox;
+import android.widget.Switch;
 
 import android.util.Log;
 
@@ -38,7 +38,7 @@ public class LocGattActivity extends Activity {
 	int nlocs = 0;
 
 	TextView tv_lastloc, tv_nlocs;
-	CheckBox checkbox_1;
+	Switch switch_1; //avant j'utilisais android.widget.CheckBox;
 	
 	
     @Override
@@ -49,7 +49,7 @@ public class LocGattActivity extends Activity {
         tv_lastloc = findViewById(R.id.tv_lastloc); 
         tv_nlocs = findViewById(R.id.tv_nlocs); 
 
-        checkbox_1 = findViewById(R.id.checkbox_1);
+        switch_1 = findViewById(R.id.switch_1);
         
         Intent i = new Intent(this, LocGattService.class);
         startService(i); //nécessaire ou pas???
@@ -93,11 +93,11 @@ public class LocGattActivity extends Activity {
                     break;
                 case LocGattService.MSG_BT_CONNECTED:
                     Log.d(TAG, "Activity: handler -> MSG_BT_CONNECTED");
-                    checkbox_1.setChecked(true);
+                    switch_1.setChecked(true);
                     break;
                 case LocGattService.MSG_BT_DISCONNECTED:
                     Log.d(TAG, "Activity: handler -> MSG_BT_DISCONNECTED");
-                    checkbox_1.setChecked(false);
+                    switch_1.setChecked(false);
                     break;
                 default:
                     super.handleMessage(msg);

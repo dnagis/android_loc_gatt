@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<style name="MonStyle" parent="Theme.MaterialComponents.NoActionBar" >
+      
+        <!-- <item name="colorControlActivated">#0303fc</item>
+        <item name="colorSwitchThumbNormal">#0303fc</item> 
+        <item name="android:textColor">#0303fc</item>
+        -->
+        
+        <item name="colorAccent">#0303fc</item>
+        
+        
+        
+        
+    </style>
+	
+
+</resources>
