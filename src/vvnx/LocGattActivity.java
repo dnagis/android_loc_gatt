@@ -35,9 +35,9 @@ public class LocGattActivity extends Activity {
 	Messenger mService = null;
 	private static final String TAG = "LocGatt";
 	
+	int nlocs = 0;
 
-
-	TextView tv_lastloc;
+	TextView tv_lastloc, tv_nlocs;
 	CheckBox checkbox_1;
 	
 	
@@ -47,6 +47,7 @@ public class LocGattActivity extends Activity {
         View view = getLayoutInflater().inflate(R.layout.mon_activity, null);
         setContentView(view);
         tv_lastloc = findViewById(R.id.tv_lastloc); 
+        tv_nlocs = findViewById(R.id.tv_nlocs); 
 
         checkbox_1 = findViewById(R.id.checkbox_1);
         
@@ -88,6 +89,7 @@ public class LocGattActivity extends Activity {
 					Date d = new Date();
 					SimpleDateFormat sdf = new SimpleDateFormat("dd MMM HH:mm:ss");	
 					tv_lastloc.setText("LAST LOC: "+ sdf.format(d));
+					tv_nlocs.setText("N LOCS: " + nlocs++);
                     break;
                 case LocGattService.MSG_BT_CONNECTED:
                     Log.d(TAG, "Activity: handler -> MSG_BT_CONNECTED");

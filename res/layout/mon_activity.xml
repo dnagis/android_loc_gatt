@@ -34,6 +34,13 @@
     android:textSize="18sp"
     android:text="@string/tv_lastloc_txt" />
     
+<TextView xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/tv_nlocs"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+     android:layout_below="@+id/tv_lastloc"
+    android:textSize="18sp"
+    android:text="@string/tv_nlocs_txt" />
+    
 
     
     
