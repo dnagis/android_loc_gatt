@@ -16,6 +16,7 @@
 <resources>
 
 	<string name="txt_btn_stop">STOP</string>
-    <string name="textview_1_text">no loc yet</string>
+    <string name="tv_lastloc_txt">no loc yet</string>
+    <string name="tv_nlocs_txt">0</string>
 
 </resources>

@@ -37,7 +37,7 @@ public class LocGattActivity extends Activity {
 	
 
 
-	TextView textview_1;
+	TextView tv_lastloc;
 	CheckBox checkbox_1;
 	
 	
@@ -46,7 +46,7 @@ public class LocGattActivity extends Activity {
         super.onCreate(savedInstanceState);
         View view = getLayoutInflater().inflate(R.layout.mon_activity, null);
         setContentView(view);
-        textview_1 = findViewById(R.id.textview_1); 
+        tv_lastloc = findViewById(R.id.tv_lastloc); 
 
         checkbox_1 = findViewById(R.id.checkbox_1);
         
@@ -87,7 +87,7 @@ public class LocGattActivity extends Activity {
                     Log.d(TAG, "Activity: handler -> MSG_NEW_LOC");
 					Date d = new Date();
 					SimpleDateFormat sdf = new SimpleDateFormat("dd MMM HH:mm:ss");	
-					textview_1.setText("LAST LOC: "+ sdf.format(d));
+					tv_lastloc.setText("LAST LOC: "+ sdf.format(d));
                     break;
                 case LocGattService.MSG_BT_CONNECTED:
                     Log.d(TAG, "Activity: handler -> MSG_BT_CONNECTED");

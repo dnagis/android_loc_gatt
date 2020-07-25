@@ -3,6 +3,14 @@
 ### Description
 Gatt WriteChar vers esp32 gatts triggered par locationUpdate()
 
+### Ergonomie: EveryDay
+# build & install
+
+make LocGatt
+adb uninstall vvnx.locgatt
+adb install out/target/product/generic_arm64/system/app/LocGatt/LocGatt.apk
+adb shell pm grant vvnx.locgatt android.permission.ACCESS_FINE_LOCATION #Suffisant pour loc + bluetooth
+
 
 ### Design
 
@@ -49,23 +57,7 @@ https://www.c-sharpcorner.com/article/bound-service-using-messenger-in-android-p
 https://medium.com/mindorks/mastering-android-handler-chapter-2-fb67d94f6327 ++++++ --> surtout la partie "The secret sauce is messenger"
 
 
-### Ergonomie: EveryDay
-# build & install
 
-make LocGatt
-adb uninstall vvnx.locgatt
-adb install out/target/product/mido/system/app/LocGatt/LocGatt.apk
-
-pm grant vvnx.locgatt android.permission.ACCESS_FINE_LOCATION #Suffisant pour loc + bluetooth
-
-
-# repo / rsync
-rsync vers kimsufi
-syntaxe:
-rsync options source destination
-
-rsync -azvhu /initrd/mnt/dev_save/android/lineageOS/sources/development/samples/LocGatt ks:/home/android	
-rsync -azvhu ks:/home/android/LocGatt /initrd/mnt/dev_save/android/lineageOS/sources/development/samples
 
 
 ### Doc
