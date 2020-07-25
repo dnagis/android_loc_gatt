@@ -30,7 +30,7 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothProfile;
 import java.util.UUID;
 
-
+import android.database.sqlite.SQLiteDatabase;
 
 
 public class LocGattService extends Service implements LocationListener {
@@ -61,6 +61,7 @@ public class LocGattService extends Service implements LocationListener {
 	private String BDADDR = "24:6F:28:7A:CD:BE";	
 	//private String BDADDR = "30:AE:A4:04:C3:5A";	
 	
+	private BaseDeDonnees maBDD;
 	
 	/**
 	 * système IPC Messenger / Handler basé sur le Binder
@@ -114,6 +115,8 @@ public class LocGattService extends Service implements LocationListener {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.d(TAG, "onStartCommand()");
+		
+		maBDD = new BaseDeDonnees(this);
 		
 		//Location
 		mLocationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
@@ -188,6 +191,7 @@ public class LocGattService extends Service implements LocationListener {
 			Log.d(TAG, "conversion lat=" + Long.toHexString(lat_l) + "  lng=" + Long.toHexString(lng_l) + " le concat=" + concat);		
 			mCharacteristic.setValue(concat);
 			mBluetoothGatt.writeCharacteristic(mCharacteristic);
+			maBDD.logFix(location.getTime(), location.getLatitude(), location.getLongitude(), location.getAccuracy());
         }
         
         Message msg = Message.obtain(null, LocGattService.MSG_NEW_LOC);
