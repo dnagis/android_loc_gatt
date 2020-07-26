@@ -43,6 +43,7 @@ public class LocGattService extends Service implements LocationListener {
 	public static final int MSG_STOP = 400;
 	public static final int MSG_BT_CONNECTED = 500;
 	public static final int MSG_BT_DISCONNECTED = 600;
+	public static final int MSG_TEST = 700;
 	
 	Notification mNotification;
 	
@@ -61,6 +62,7 @@ public class LocGattService extends Service implements LocationListener {
 	private String BDADDR = "24:6F:28:7A:CD:BE";	
 	//private String BDADDR = "30:AE:A4:04:C3:5A";	
 	
+	private Location currentLoc;
 	private BaseDeDonnees maBDD;
 	
 	/**
@@ -83,6 +85,10 @@ public class LocGattService extends Service implements LocationListener {
 				case MSG_STOP:
                     Log.d(TAG, "Service: handleMessage() -> STOP");
                     shutDown();
+                    break; 
+                case MSG_TEST:
+                    Log.d(TAG, "Service: handleMessage() -> TEST");
+                    sendFakeLoc();
                     break;                    
                 default:
                     super.handleMessage(msg);
@@ -160,6 +166,13 @@ public class LocGattService extends Service implements LocationListener {
 		stopForeground(true);
 		stopSelf();		
 	}
+	
+	public void sendFakeLoc() {
+		final Location maFakeLocation = new Location("");
+		maFakeLocation.setLatitude(1.2345d);
+		maFakeLocation.setLongitude(1.2345d);
+		sendLocViaGatt(maFakeLocation);
+	}
   
   
   
@@ -171,40 +184,8 @@ public class LocGattService extends Service implements LocationListener {
 	 **/    
     @Override	
     public void onLocationChanged(Location location) {
-        Log.d(TAG, location.getLatitude() + ",  " + location.getLongitude() + ",  " + location.getAccuracy() + ",  " + location.getAltitude() + ",  " + location.getVerticalAccuracyMeters() + ",  "  + location.getTime());
-        
-        
-        if (mCharacteristic != null) {
-			//mBluetoothGatt.readCharacteristic(mCharacteristic);
-		
-			//Encodage de latlng en un byte[] ou String pour writechar
-			double lat_8 = location.getLatitude() * 100000000; //je veux .8f
-			double lng_8 = location.getLongitude() * 100000000;	
-				
-			long lat_l = (new Double(lat_8)).longValue(); //un long, je gère pas la signature
-			//4393307136 --> Long.toHexString -> 105dc8c00 --> python2 --> int("105dc8c00", 16) --> 4393307136
-			long lng_l = (new Double(lng_8)).longValue();
-			String lat_s = Long.toHexString(lat_l);
-			String lng_s = Long.toHexString(lng_l);
-			String concat = Integer.toString(lat_s.length()) + lat_s + Integer.toString(lng_s.length()) + lng_s;
-			//Exple: 43.93302858, 4.98908925 -> 9 (on sait que lat va tenir les 9 prochains bytes), + 105dc7b4a + 8 (idem pour lng: length = 8) + 1dbcbefd
-			Log.d(TAG, "conversion lat=" + Long.toHexString(lat_l) + "  lng=" + Long.toHexString(lng_l) + " le concat=" + concat);		
-			mCharacteristic.setValue(concat);
-			
-			if(mBluetoothGatt.writeCharacteristic(mCharacteristic)) {
-				maBDD.logFix(location.getTime(), location.getLatitude(), location.getLongitude(), location.getAccuracy());
-				Message msg = Message.obtain(null, LocGattService.MSG_NEW_LOC_SENT);
-				try {
-					mClient.send(msg);
-					} catch (RemoteException e) {
-					e.printStackTrace();
-				}
-				
-			}
-        }
-        
-
-        
+        //Log.d(TAG, location.getLatitude() + ",  " + location.getLongitude() + ",  " + location.getAccuracy() + ",  " + location.getAltitude() + ",  " + location.getVerticalAccuracyMeters() + ",  "  + location.getTime());
+        sendLocViaGatt(location);       
 	}
         
 	@Override
@@ -240,6 +221,40 @@ public class LocGattService extends Service implements LocationListener {
 	}
 	
 	
+	public void sendLocViaGatt(Location location){
+		    Log.d(TAG, "sendLocViaGatt() début de la fonction location: " + location.getLatitude() + ",  " + location.getLongitude());
+		    
+		    
+		    if (mCharacteristic != null) {
+			Log.d(TAG, "sendLocViaGatt() mCharacteristic != NULL");	
+			//mBluetoothGatt.readCharacteristic(mCharacteristic);
+		
+			//Encodage de latlng en un byte[] ou String pour writechar
+			double lat_8 = location.getLatitude() * 100000000; //je veux .8f
+			double lng_8 = location.getLongitude() * 100000000;	
+				
+			long lat_l = (new Double(lat_8)).longValue(); //un long, je gère pas la signature
+			//4393307136 --> Long.toHexString -> 105dc8c00 --> python2 --> int("105dc8c00", 16) --> 4393307136
+			long lng_l = (new Double(lng_8)).longValue();
+			String lat_s = Long.toHexString(lat_l);
+			String lng_s = Long.toHexString(lng_l);
+			String concat = Integer.toString(lat_s.length()) + lat_s + Integer.toString(lng_s.length()) + lng_s;
+			//Exple: 43.93302858, 4.98908925 -> 9 (on sait que lat va tenir les 9 prochains bytes), + 105dc7b4a + 8 (idem pour lng: length = 8) + 1dbcbefd
+			Log.d(TAG, "conversion lat=" + Long.toHexString(lat_l) + "  lng=" + Long.toHexString(lng_l) + " le concat=" + concat);		
+			mCharacteristic.setValue(concat);
+			
+			mBluetoothGatt.writeCharacteristic(mCharacteristic);
+			
+			currentLoc = location;
+			
+			
+
+        }
+		
+	}
+	
+	
+	//Les CallBacks
 	private final BluetoothGattCallback gattCallback = new BluetoothGattCallback() {
 		@Override
 		public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
@@ -276,7 +291,15 @@ public class LocGattService extends Service implements LocationListener {
 				
 		@Override
 		public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-				Log.i(TAG, "onCharacteristicWrite callback.");
+				Log.i(TAG, "onCharacteristicWrite callback avec currentLoc = " + currentLoc.getLatitude() + ",  " + currentLoc.getLongitude());
+				
+				maBDD.logFix(currentLoc.getTime(), currentLoc.getLatitude(), currentLoc.getLongitude(), currentLoc.getAccuracy());
+				Message msg = Message.obtain(null, LocGattService.MSG_NEW_LOC_SENT);
+				try {
+					mClient.send(msg);
+					} catch (RemoteException e) {
+					e.printStackTrace();
+				}
 				}
 		};
 	

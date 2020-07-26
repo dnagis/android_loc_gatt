@@ -26,7 +26,16 @@
 	android:layout_width="wrap_content"
 	android:layout_alignParentRight="true"
 	android:text="@string/txt_btn_stop"
-	android:onClick="ActionPressBouton_stop" />    
+	android:onClick="ActionPressBouton_stop" />  
+	
+<Button
+	android:id="@+id/button_test"
+	android:layout_height="wrap_content"
+	android:layout_width="wrap_content"
+	android:layout_alignParentRight="true"
+	android:layout_alignParentBottom="true"
+	android:text="@string/txt_btn_test"
+	android:onClick="ActionPressBouton_test" />    
 
 <TextView xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/tv_lastloc"
     android:layout_width="wrap_content"

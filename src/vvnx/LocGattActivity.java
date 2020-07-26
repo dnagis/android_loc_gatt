@@ -63,16 +63,29 @@ public class LocGattActivity extends Activity {
 
 		}
     
+    //Bouton "STOP"
     public void ActionPressBouton_stop(View v) {
 		Log.d(TAG, "press bouton stop"); 	
 		if (!mSceBound) return;
-		//utiliser le système de messages: hello world
+		//Envoi d'un message vers le service mService
 		Message msg = Message.obtain(null, LocGattService.MSG_STOP, 0, 0);
 		try {
             mService.send(msg);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+	}
+	
+	//Bouton "TEST"
+	public void ActionPressBouton_test(View v) {
+		//Envoi d'un message vers le service mService
+		if (!mSceBound) return;
+		Message msg = Message.obtain(null, LocGattService.MSG_TEST, 0, 0);
+		try {
+            mService.send(msg);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }	
 	}
 	
 	
@@ -89,7 +102,7 @@ public class LocGattActivity extends Activity {
 					Date d = new Date();
 					SimpleDateFormat sdf = new SimpleDateFormat("dd MMM HH:mm:ss");	
 					tv_lastloc.setText("LAST LOC SENT: "+ sdf.format(d));
-					tv_nlocs.setText("N LOCS: " + nlocs++);
+					tv_nlocs.setText("N LOCS: " + ++nlocs);
                     break;
                 case LocGattService.MSG_BT_CONNECTED:
                     Log.d(TAG, "Activity: handler -> MSG_BT_CONNECTED");
