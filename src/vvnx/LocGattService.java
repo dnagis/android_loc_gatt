@@ -59,7 +59,8 @@ public class LocGattService extends Service implements LocationListener {
 	private BluetoothGattCharacteristic mCharacteristic = null;	
 	private static final UUID SERVICE_UUID = UUID.fromString("000000ff-0000-1000-8000-00805f9b34fb");
 	private static final UUID CHARACTERISTIC_PRFA_UUID = UUID.fromString("0000ff01-0000-1000-8000-00805f9b34fb");
-	private String BDADDR = "24:6F:28:7A:CD:BE";	
+	//private String BDADDR = "24:6F:28:7A:CD:BE";	
+	private String BDADDR = "24:6F:28:79:52:FE";
 	//private String BDADDR = "30:AE:A4:04:C3:5A";	
 	
 	private Location currentLoc;
